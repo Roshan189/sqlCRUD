@@ -50,28 +50,26 @@ const Employee = () => {
     }
   };
 
+  // console.log("formData1", formData);
+
   //to update employee details
   const handleUpdate = async (record) => {
-    // console.log(record);
+    console.log("record", record);
 
-    // const oneFetch = await axios.get(
-    //   `http://localhost:6500/api/v1/employee/getOneEmployee/${record.id}`
-    // );
+    const oneFetch = await axios.get(
+      `http://localhost:6500/api/v1/employee/getOneEmployee/${record.id}`
+    );
+    setformData(oneFetch.data);
     // console.log("oneFetch", oneFetch.data);
+    // console.log("formData2", formData);
 
     try {
       const res = await axios.patch(
         `http://localhost:6500/api/v1/employee/updateEmployee/${record.id}`,
-        formData
+        oneFetch.data
       );
       // console.log("formdata", formData);
-      setformData((prevState) => ({
-        ...prevState,
-        name: record.name,
-        age: record.age,
-        experience: record.experience,
-        salary: record.salary,
-      }));
+
       console.log("formdataaaaa", formData);
       console.log("response", res.data);
     } catch (error) {
@@ -143,12 +141,13 @@ const Employee = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => handleUpdate(record)}>Edit</Button>
+          <Button onClick={() => handleUpdate(record)}>Edits</Button>
           <Button onClick={() => handleDelete(record)}>Delete</Button>
         </Space>
       ),
     },
   ];
+
 
   return (
     <div>
@@ -249,6 +248,7 @@ const Employee = () => {
         </Space>
 
         {/* edit user */}
+        {console.log(formData, "Roshan")}
         <Space>
           <Form
             name="basic"
@@ -275,9 +275,11 @@ const Employee = () => {
               ]}
             >
               <Input
+                type="text"
                 name="name"
-                value={formData.name}
-                onChange={handleInputChange}
+                // defaultValue={formData.name || "tt"}
+                value={"rrrr"}
+                // onChange={handleInputChange}
               />
             </Form.Item>
             <Form.Item

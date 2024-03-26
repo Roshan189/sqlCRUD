@@ -1,53 +1,75 @@
 const db = require("../models");
 
-//create main model
+// Create main model
 const Employee = db.employees;
 
-//create employee
+// Create employee
 const addEmployee = async (req, res) => {
-  let info = {
-    name: req.body.name,
-    age: req.body.age,
-    experience: req.body.experience,
-    salary: req.body.salary,
-  };
-  //   console.log("add", req.body);
+  try {
+    let info = {
+      name: req.body.name,
+      age: req.body.age,
+      experience: req.body.experience,
+      salary: req.body.salary,
+    };
 
-  const employee = await Employee.create(info);
-  res.status(200).send(employee);
-  // console.log(employee);
+    const employee = await Employee.create(info);
+    res.status(200).send(employee);
+  } catch (error) {
+    console.error("Error adding employee:", error);
+    res.status(500).send("Error adding employee");
+  }
 };
 
-//get allEmployees
+// Get all employees
 const getAllEmployees = async (req, res) => {
-  let employees = await Employee.findAll({});
-  res.status(200).send(employees);
+  try {
+    let employees = await Employee.findAll({});
+    res.status(200).send(employees);
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    res.status(500).send("Error fetching employees");
+  }
 };
 
-//get OneEmployee
+// Get one employee
 const getOneEmployee = async (req, res) => {
-  let id = req.params.id;
-  // console.log(id);
-  let employee = await Employee.findOne({ where: { id: id } });
-  res.status(200).send(employee);
+  try {
+    let id = req.params.id;
+    let employee = await Employee.findOne({ where: { id: id } });
+    res.status(200).send(employee);
+  } catch (error) {
+    console.error("Error fetching employee:", error);
+    res.status(500).send("Error fetching employee");
+  }
 };
 
-//update employee
+// Update employee
 const updateEmployee = async (req, res) => {
-  let id = req.params.id;
-  let { name, age, experience, salary } = req.body;
-  let employees = await Employee.update(
-    { name, age, experience, salary },
-    { where: { id: id } }
-  );
-  res.status(200).send(employees, "employee updated successfully!!");
+  try {
+    let id = req.params.id;
+    let { name, age, experience, salary } = req.body;
+    await Employee.update(
+      { name, age, experience, salary },
+      { where: { id: id } }
+    );
+    res.status(200).send("Employee updated successfully!!");
+  } catch (error) {
+    console.error("Error updating employee:", error);
+    res.status(500).send("Error updating employee");
+  }
 };
 
-//delete employee
+// Delete employee
 const deleteEmployee = async (req, res) => {
-  let id = req.params.id;
-  await Employee.destroy({ where: { id: id } });
-  res.status(200).send("employee deleted from database");
+  try {
+    let id = req.params.id;
+    await Employee.destroy({ where: { id: id } });
+    res.status(200).send("Employee deleted from database");
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    res.status(500).send("Error deleting employee");
+  }
 };
 
 module.exports = {
